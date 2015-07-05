@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">PruebaProspectos</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="enter_email">Ingresa Tu Correo Electrónico</string>
+    <string name="urlbase">http://directodevelopment.igapps.co</string>
+    <string name="title_activity_prospects">Prospectos</string>
+    <string name="enter_password">Ingresa tu contraseña</string>
+    <string name="sign_in">Iniciar Sesión</string>
+</resources>
