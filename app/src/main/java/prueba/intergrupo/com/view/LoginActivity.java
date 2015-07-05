@@ -13,6 +13,7 @@ import android.widget.EditText;
 import network.WebServiceListener;
 import network.WebServiceManager;
 import network.http.HttpResponse;
+import utilities.SecurePreferences;
 
 
 public class LoginActivity extends ActionBarActivity implements WebServiceListener
@@ -21,6 +22,8 @@ public class LoginActivity extends ActionBarActivity implements WebServiceListen
     private EditText etEnterEmail,etEnterPassword;
     private Button btnSignIn;
     private WebServiceManager wsManager;
+    private String user, password;
+    private SecurePreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,14 +34,15 @@ public class LoginActivity extends ActionBarActivity implements WebServiceListen
             setSupportActionBar(toolbar);
             getSupportActionBar().setTitle(R.string.app_name);
         }
-
         etEnterEmail = (EditText) findViewById(R.id.etEnterEmail);
         etEnterPassword = (EditText) findViewById(R.id.etEnterPassword);
         btnSignIn = (Button) findViewById(R.id.btnSignIn);
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                wsManager.Authenticate(LoginActivity.this, etEnterEmail.getText().toString(), etEnterPassword.getText().toString());
+                user = etEnterEmail.getText().toString();
+                password = etEnterPassword.getText().toString();
+                wsManager.Authenticate(LoginActivity.this, user, password);
             }
         });
 
@@ -89,7 +93,10 @@ public class LoginActivity extends ActionBarActivity implements WebServiceListen
     }
 
     @Override
-    public void onValidSession() {
+    public void onValidSession()
+    {
+        preferences.put("email", user);
+        preferences.put("password", password);
         Intent intent = new Intent(this, ProspectsActivity.class);
         startActivity(intent);
         finish();

@@ -29,7 +29,6 @@ public class WebServiceManager
     public WebServiceManager(Context context, WebServiceListener listener) {
         WsListener = listener;
         _context = context;
-
     }
 
 
