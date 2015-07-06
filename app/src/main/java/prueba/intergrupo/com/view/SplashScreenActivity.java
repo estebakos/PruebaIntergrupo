@@ -78,7 +78,7 @@ public class SplashScreenActivity extends Activity implements WebServiceListener
     }
 
     @Override
-    public void onHttpError(HttpResponse resp) {
+    public void onHttpError() {
         ActivityToOpen = "Prospects";
         timer.schedule(task, 1000);
     }

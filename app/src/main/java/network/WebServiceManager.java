@@ -1,5 +1,6 @@
 package network;
 
+import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -11,6 +12,7 @@ import network.http.HttpHandler;
 import network.http.HttpListener;
 import network.http.HttpResponse;
 import prueba.intergrupo.com.view.R;
+import utilities.SessionVars;
 import utilities.json.Json;
 import utilities.json.OutputType;
 
@@ -85,7 +87,15 @@ public class WebServiceManager
                                         httpResponse.Response);
                                 if(authResp.getSuccess())
                                 {
-                                    WsListener.onValidSession();
+                                    if(authResp.getAuthToken()!=null && !authResp.getAuthToken().equals(""))
+                                    {
+                                        SessionVars.AuthToken = authResp.getAuthToken();
+                                        WsListener.onValidSession();
+                                    }
+                                    else
+                                    {
+                                        WsListener.onInvalidSession();
+                                    }
                                 }
                                 else
                                 {
@@ -94,12 +104,74 @@ public class WebServiceManager
                             }
                             catch (Exception ex)
                             {
-                                WsListener.onInternetFail();
+                                WsListener.onHttpError();
                             }
                         }
                     });
                     httpGet.addQueryStringParam("email", Email);
                     httpGet.addQueryStringParam("password", Password);
+                    httpGet.ExecuteGet();
+                } else {
+                    WsListener.onUnexpectedError();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+
+    public void GetProspects(Context context) {
+        try {
+            if (!isNetworkAvailable(context)) {
+                WsListener.onInternetFail();
+            } else {
+                if (getRestUrl() != "") {
+                    HttpHandler httpGet = new HttpHandler(getRestUrl(),
+                            "sch/prospects", new HttpListener() {
+
+                        @Override
+                        public void onRequestFinish(
+                                HttpResponse httpResponse) {
+                            Json json = new Json();
+                            json.setOutputType(OutputType.minimal);
+                            json.setElementType(
+                                    AuthenticateResponse.class, "zone",
+                                    Zone.class);
+                            AuthenticateResponse resp;
+                            json.setElementType(
+                                    Zone.class, "dynamicAttributes",
+                                    DynamicAttributes.class);
+                            AuthenticateResponse authResp;
+                            try {
+                                authResp = json.fromJson(
+                                        AuthenticateResponse.class,
+                                        httpResponse.Response);
+                                if(authResp.getSuccess())
+                                {
+                                    if(authResp.getAuthToken()!=null && !authResp.getAuthToken().equals(""))
+                                    {
+                                        SessionVars.AuthToken = authResp.getAuthToken();
+                                        WsListener.onValidSession();
+                                    }
+                                    else
+                                    {
+                                        WsListener.onInvalidSession();
+                                    }
+                                }
+                                else
+                                {
+                                    WsListener.onInvalidSession();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                WsListener.onHttpError();
+                            }
+                        }
+                    });
+                    httpGet.addHeader("token", SessionVars.AuthToken);
                     httpGet.ExecuteGet();
                 } else {
                     WsListener.onUnexpectedError();

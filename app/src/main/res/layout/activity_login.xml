@@ -2,38 +2,67 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity"
-    android:background="@color/primary_dark">
+    tools:context=".LoginActivity">
 
-    <include
-        android:id="@+id/material_toolbar"
-        layout="@layout/toolbar"/>
 
     <EditText
         android:id="@+id/etEnterEmail"
+        android:layout_centerInParent="true"
         android:hint="@string/enter_email"
-        android:layout_below="@id/material_toolbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:textColor="@color/text_primary"/>
+        android:textColor="@color/text_secondary"/>
+
+    <TextView
+        android:id="@+id/tvEmailRequired"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etEnterEmail"
+        android:textColor="@android:color/holo_red_light"
+        android:text="@string/email_required"
+        android:layout_alignLeft="@id/etEnterEmail"
+        android:visibility="invisible"/>
 
     <EditText
         android:id="@+id/etEnterPassword"
         android:hint="@string/enter_password"
-        android:layout_below="@id/etEnterEmail"
+        android:layout_below="@id/tvEmailRequired"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignRight="@id/etEnterEmail"
         android:layout_alignLeft="@id/etEnterEmail"
-        android:textColor="@color/text_primary"/>
+        android:textColor="@color/text_secondary"
+        android:inputType="textPassword"/>
+
+    <TextView
+        android:id="@+id/tvPasswordRequired"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etEnterPassword"
+        android:textColor="@android:color/holo_red_light"
+        android:text="@string/password_required"
+        android:layout_alignLeft="@id/etEnterEmail"
+        android:visibility="invisible"/>
 
     <Button
         android:id="@+id/btnSignIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/etEnterPassword"
+        android:layout_below="@id/tvPasswordRequired"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/text_primary"
-        android:text="@string/sign_in"/>
+        android:textColor="@color/text_secondary"
+        android:text="@string/sign_in"
+        />
+
+    <ImageView
+        android:id="@+id/ivLogoIntergrupo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/etEnterEmail"
+        android:src="@drawable/intergrupo"
+        android:scaleType="fitCenter"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"/>
 
 </RelativeLayout>

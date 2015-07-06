@@ -2,11 +2,14 @@
     <string name="app_name">PruebaProspectos</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_sign_out">Cerrar Sesión</string>
     <string name="enter_email">Ingresa Tu Correo Electrónico</string>
     <string name="urlbase">http://directodevelopment.igapps.co</string>
     <string name="title_activity_prospects">Prospectos</string>
     <string name="enter_password">Ingresa tu contraseña</string>
     <string name="sign_in">Iniciar Sesión</string>
     <string name="title_activity_splash_screen">SplashScreenActivity</string>
+    <string name="edit_prospect">Editar</string>
+    <string name="email_required">Un email es requerido</string>
+    <string name="password_required">Un password es requerido</string>
 </resources>
