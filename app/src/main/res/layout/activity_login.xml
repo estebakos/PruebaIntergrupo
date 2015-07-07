@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:textColor="@color/text_secondary"/>
+        android:textColor="@color/text_primary"/>
 
     <TextView
         android:id="@+id/tvEmailRequired"
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@id/etEnterEmail"
         android:layout_alignLeft="@id/etEnterEmail"
-        android:textColor="@color/text_secondary"
+        android:textColor="@color/text_primary"
         android:inputType="textPassword"/>
 
     <TextView
@@ -51,7 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tvPasswordRequired"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/text_secondary"
+        android:textColor="@color/text_primary"
         android:text="@string/sign_in"
         />
 

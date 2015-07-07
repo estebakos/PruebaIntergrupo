@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -22,6 +23,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.lang.ref.WeakReference;
 
+import data.ProspectDbHelper;
+import model.ProspectResponse;
 import network.WebServiceListener;
 import network.WebServiceManager;
 import network.http.HttpResponse;
@@ -36,7 +39,7 @@ public class LoginActivity extends AppCompatActivity implements WebServiceListen
     private TextView tvEmailRequired, tvPasswordRequired;
     private WebServiceManager wsManager;
     private String user, password;
-    private SecurePreferences preferences;
+    private SecurePreferences preferences, prefsLastUser;
     private ProgressDialog mDialog;
 
     @Override
@@ -49,6 +52,7 @@ public class LoginActivity extends AppCompatActivity implements WebServiceListen
             getSupportActionBar().setTitle(R.string.app_name);
         }
         preferences = new SecurePreferences(this, "login-preferences", "loginkey", true);
+        prefsLastUser = new SecurePreferences(this, "db-preferences", "dbKey", true);
         etEnterEmail = (EditText) findViewById(R.id.etEnterEmail);
         etEnterPassword = (EditText) findViewById(R.id.etEnterPassword);
         btnSignIn = (Button) findViewById(R.id.btnSignIn);
@@ -144,11 +148,25 @@ public class LoginActivity extends AppCompatActivity implements WebServiceListen
     public void onValidSession()
     {
         mDialog.cancel();
+
+        if(prefsLastUser.getString("user") != null && !prefsLastUser.getString("user").equals(user)) {
+            ProspectDbHelper dbHelper = new ProspectDbHelper(getBaseContext());
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            dbHelper.CreateProspectTable(db);
+            dbHelper.insertTestProspects(db);
+        }
+        prefsLastUser.put("user", user);
         preferences.put("email", user);
         preferences.put("password", password);
+
         Intent intent = new Intent(this, ProspectsActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void onProspects(ProspectResponse prospectResponse) {
+
     }
 
     @Override

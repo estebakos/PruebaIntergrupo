@@ -3,11 +3,12 @@ package prueba.intergrupo.com.view;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 
 import java.sql.SQLException;
@@ -17,17 +18,20 @@ import adapter.ProspectAdapter;
 import adapter.ProspectArrayAdapter;
 import data.ProspectDbHelper;
 import model.Prospect;
+import model.ProspectResponse;
 import network.WebServiceListener;
 import network.WebServiceManager;
 import utilities.SecurePreferences;
 
-public class ProspectsActivity extends ActionBarActivity implements WebServiceListener, SwipeRefreshLayout.OnRefreshListener,
+public class ProspectsActivity extends AppCompatActivity implements WebServiceListener, SwipeRefreshLayout.OnRefreshListener,
 AdapterListener{
 
     private SecurePreferences preferences;
     private WebServiceManager wsManager;
     private ListView lProspects;
     private SwipeRefreshLayout swipeLayout;
+    private ProspectDbHelper dbHelper;
+    private SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +39,13 @@ AdapterListener{
         setContentView(R.layout.activity_prospects);
         Toolbar toolbar = (Toolbar) findViewById(R.id.material_toolbar);
         if (toolbar != null) {
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_48dp);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
             setSupportActionBar(toolbar);
             getSupportActionBar().setTitle(R.string.app_name);
         }
@@ -43,16 +54,19 @@ AdapterListener{
         swipeLayout.setOnRefreshListener(this);
         preferences = new SecurePreferences(this, "login-preferences", "loginkey", true);
         wsManager = new WebServiceManager(this,this);
+        dbHelper = new ProspectDbHelper(getBaseContext());
+        db = dbHelper.getWritableDatabase();
         getProspects();
     }
 
     public void getProspects()
     {
+        addProspectsToAdapter();
         wsManager.GetProspects(this);
-        //ProspectDbHelper dbHelper = new ProspectDbHelper(getBaseContext());
-        //SQLiteDatabase db = dbHelper.getWritableDatabase();
-        //dbHelper.insertProspect(db, "");
+    }
 
+    public void addProspectsToAdapter()
+    {
         ProspectAdapter adapter = new ProspectAdapter(this);
         try
         {
@@ -109,7 +123,9 @@ AdapterListener{
 
     @Override
     public void onInvalidSession() {
-
+        Intent loginIntent = new Intent(this, LoginActivity.class);
+        startActivity(loginIntent);
+        finish();
     }
 
     @Override
@@ -123,12 +139,36 @@ AdapterListener{
     }
 
     @Override
+    public void onProspects(ProspectResponse prospectResponse) {
+        try {
+            if (prospectResponse != null && prospectResponse.getProspects() != null && prospectResponse.getProspects().size() > 0) {
+                for (Prospect prospect : prospectResponse.getProspects()) {
+                    dbHelper.insertProspect(db, prospect.getCedula(), prospect.getNombre(),
+                            prospect.getApellido(), prospect.getTelefono(), prospect.getEstado());
+                }
+                addProspectsToAdapter();
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
     public void onRefresh() {
         getProspects();
     }
 
     @Override
     public void onEditClick(Prospect prospect) {
-
+        Intent editProspectIntent = new Intent(this, EditProspect.class);
+        editProspectIntent.putExtra("Cedula",prospect.getCedula());
+        editProspectIntent.putExtra("Nombre",prospect.getNombre());
+        editProspectIntent.putExtra("Apellido",prospect.getApellido());
+        editProspectIntent.putExtra("Telefono",prospect.getTelefono());
+        editProspectIntent.putExtra("Estado",prospect.getEstado());
+        startActivity(editProspectIntent);
+        finish();
     }
 }

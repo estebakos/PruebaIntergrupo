@@ -12,6 +12,7 @@ import android.view.Window;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import model.ProspectResponse;
 import network.WebServiceListener;
 import network.WebServiceManager;
 import network.http.HttpResponse;
@@ -98,5 +99,10 @@ public class SplashScreenActivity extends Activity implements WebServiceListener
     public void onValidSession()    {
         ActivityToOpen = "Prospects";
         timer.schedule(task, 1000);
+    }
+
+    @Override
+    public void onProspects(ProspectResponse prospectResponse) {
+
     }
 }

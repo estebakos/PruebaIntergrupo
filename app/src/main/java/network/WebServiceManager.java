@@ -7,6 +7,8 @@ import android.net.NetworkInfo;
 
 import model.AuthenticateResponse;
 import model.DynamicAttributes;
+import model.Prospect;
+import model.ProspectResponse;
 import model.Zone;
 import network.http.HttpHandler;
 import network.http.HttpListener;
@@ -137,33 +139,14 @@ public class WebServiceManager
                             Json json = new Json();
                             json.setOutputType(OutputType.minimal);
                             json.setElementType(
-                                    AuthenticateResponse.class, "zone",
-                                    Zone.class);
-                            AuthenticateResponse resp;
-                            json.setElementType(
-                                    Zone.class, "dynamicAttributes",
-                                    DynamicAttributes.class);
-                            AuthenticateResponse authResp;
+                                    ProspectResponse.class, "Prospects",
+                                    Prospect.class);
+                            ProspectResponse prospectResp;
                             try {
-                                authResp = json.fromJson(
-                                        AuthenticateResponse.class,
+                                prospectResp = json.fromJson(
+                                        ProspectResponse.class,
                                         httpResponse.Response);
-                                if(authResp.getSuccess())
-                                {
-                                    if(authResp.getAuthToken()!=null && !authResp.getAuthToken().equals(""))
-                                    {
-                                        SessionVars.AuthToken = authResp.getAuthToken();
-                                        WsListener.onValidSession();
-                                    }
-                                    else
-                                    {
-                                        WsListener.onInvalidSession();
-                                    }
-                                }
-                                else
-                                {
-                                    WsListener.onInvalidSession();
-                                }
+                                WsListener.onProspects(prospectResp);
                             }
                             catch (Exception ex)
                             {

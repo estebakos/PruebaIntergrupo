@@ -76,21 +76,27 @@ public class ProspectArrayAdapter extends ArrayAdapter<Prospect> {
 		switch (lProspect.get(position).getEstado())
 		{
 			case 0:
-				ivStatus.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_notifications_active_black_24dp));
+				ivStatus.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_access_alarm_black_36dp));
+				break;
 			case 1:
-				ivStatus.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_notifications_active_black_24dp));
+				ivStatus.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_check_black_36dp));
+				break;
 			case 2:
-				ivStatus.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_notifications_active_white_48dp));
+				ivStatus.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_text_format_black_36dp));
+				break;
 			case 3:
-				ivStatus.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_notifications_active_white_48dp));
+				ivStatus.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_highlight_off_black_36dp));
+				break;
 			case 4:
-				ivStatus.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_notifications_active_white_48dp));
+				ivStatus.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_notifications_off_black_36dp));
+				break;
 			default:
 				ivStatus.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_notifications_active_white_48dp));
+				break;
 		}
 		tvName.setText(lProspect.get(position).getNombre() + " " + lProspect.get(position).getApellido());
-		tvDocument.setText(lProspect.get(position).getCedula());
-		tvPhoneNumber.setText(lProspect.get(position).getTelefono());
+		tvDocument.setText("C.C.: " +lProspect.get(position).getCedula());
+		tvPhoneNumber.setText("Tel: "+lProspect.get(position).getTelefono());
 		return rowView;
 	}
 }
